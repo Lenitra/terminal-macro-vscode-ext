@@ -2,7 +2,7 @@
   "name": "speed-terminal-macros",
   "displayName": "Speed Terminal Macros",
   "description": "Boutons de barre d'état et panneau latéral pour lancer des terminaux avec des commandes personnalisées.",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "publisher": "TauMah",
   "license": "MIT",
   "icon": "media/logo.png",

@@ -1,113 +1,59 @@
 # Terminal Macros
 
-Extension VSCode pour lancer des commandes personnalisées dans un terminal, via :
-
-- des **boutons dans la barre d'état** (en bas de la fenêtre) ;
-- un **panneau latéral « Terminal Macros »** (icône terminal dans la barre d'activité à gauche) qui permet de tout gérer sans toucher au JSON ;
-- un **raccourci clavier** `Ctrl+Alt+M` qui liste toutes les macros.
+Des boutons pour lancer vos commandes dans un terminal VSCode : **barre d'état** (en bas), **panneau latéral** (icône terminal à gauche) et raccourci **`Ctrl+Alt+M`**.
 
 ## Panneau latéral
 
-Cliquez sur l'icône terminal dans la barre d'activité (à gauche, comme l'explorateur de fichiers).
+| Action | Comment |
+|---|---|
+| Exécuter | clic sur la macro |
+| Ajouter / Réglages | boutons `+` et `⚙` en haut du panneau |
+| Exécuter, arrêter, modifier, supprimer | icônes au survol de la macro |
+| Réordonner | glisser-déposer (ou clic droit → Monter/Descendre) |
+| Dupliquer, masquer de la barre d'état | clic droit |
 
-- **Clic sur une macro** : l'exécute dans un terminal.
-- **Glisser-déposer** : réordonne les macros (et donc les boutons de la barre d'état).
-- **`+` / `⚙`** (barre du panneau) : ajouter une macro / ouvrir les réglages.
-- **Survol d'une macro** : icônes ▶ exécuter, ■ arrêter le terminal (si en cours), ✎ modifier, 🗑 supprimer.
-- **Clic droit** : Exécuter, Arrêter, Monter/Descendre, Modifier, Dupliquer, Masquer de la barre d'état, Supprimer.
-- **Macro en cours** : icône verte, point `●`, badge avec le nombre de macros actives sur l'icône du panneau.
-- **Suppression** : immédiate, avec bouton **Annuler** dans la notification.
+Une macro dont le terminal tourne s'affiche en vert avec un `●` et compte dans le badge du panneau. Une suppression peut être annulée depuis la notification.
 
-## Scripts du projet (configs par projet)
+**Créer** (`+`) : nom → icône (galerie) → commande. **Modifier** (✎) : toutes les propriétés dans une liste (nom, icône, couleur, info-bulle, commande, dossier, terminal…), sauvegarde immédiate, `Échap` pour sortir.
 
-Si un dossier `scripts/` existe à la racine du projet ouvert, ses fichiers `.bat`, `.cmd`, `.sh`, `.bash` et `.ps1` (sous-dossiers inclus) apparaissent automatiquement dans le panneau, dans une section **« Scripts du projet »** — aucune configuration nécessaire, chaque projet a donc ses propres commandes.
+## Scripts du projet
 
-- **Clic sur un script** : l'exécute dans un terminal ouvert à la racine du projet.
-- **Icônes au survol / clic droit** : exécuter ▶, arrêter ■, ouvrir le fichier, **Ajouter aux macros** (📌 épingle le script comme macro : il gagne alors son bouton dans la barre d'état).
-- La liste se met à jour automatiquement quand des scripts sont ajoutés ou supprimés.
-- Les workspaces multi-dossiers sont supportés (une section par dossier).
+Les fichiers `.bat`, `.cmd`, `.sh`, `.bash` et `.ps1` du dossier `scripts/` à la racine du projet apparaissent automatiquement dans le panneau — **chaque projet a donc ses propres commandes**, sans configuration. Clic pour exécuter (terminal ouvert à la racine du projet), clic droit pour ouvrir le fichier ou l'épingler comme macro (📌 il gagne alors son bouton dans la barre d'état).
 
-Réglages associés :
+## Réglages (`Ctrl+,` → « Terminal Macros »)
 
-| Setting | Défaut | Description |
+| Setting | Défaut | Rôle |
 |---|---|---|
-| `terminalMacros.detectProjectScripts` | `true` | Active/désactive la détection. |
-| `terminalMacros.scriptsFolder` | `"scripts"` | Nom du dossier scanné à la racine du projet. |
-| `terminalMacros.scriptRunners` | `{}` | Commande de lancement par extension, `${script}` = chemin du fichier. Ex. `{ "sh": "wsl bash \"${script}\"" }`. Par défaut : `& "${script}"` pour .bat/.cmd/.ps1 et `bash "${script}"` pour .sh/.bash. |
-
-À noter aussi : le setting `terminalMacros.buttons` peut être défini dans le `.vscode/settings.json` d'un projet pour avoir des **macros configurées propres à ce projet** (le panneau écrit alors dedans).
-
-## Créer et modifier une macro
-
-**Créer** (`+`) : assistant en 3 étapes — nom du bouton, choix de l'icône dans une galerie (~45 icônes, ou nom de codicon libre), commande shell.
-
-**Modifier** (✎) : toutes les propriétés dans une liste organisée en sections, chaque modification étant sauvegardée immédiatement :
-
-- **Bouton** : nom, icône (galerie), couleur (palette + couleur personnalisée), info-bulle, visibilité dans la barre d'état.
-- **Exécution** : commande, répertoire de travail (racine du workspace, navigateur de dossiers ou chemin libre), nom du terminal, réutilisation du terminal.
-- **Actions** : tester la macro, dupliquer, supprimer.
-
-`Échap` ou « Terminé » pour sortir.
-
-## Barre d'état
-
-Chaque macro visible y a son bouton. Le survol affiche une info-bulle riche (commande, dossier, lien « Modifier »). Une macro peut être masquée de la barre d'état tout en restant dans le panneau (clic droit → « Masquer de la barre d'état »).
-
-## Configuration manuelle (settings)
-
-Les macros sont stockées dans le setting `terminalMacros.buttons`, modifiable aussi à la main (`Ctrl+,` → « Terminal Macros ») :
+| `terminalMacros.buttons` | 2 exemples | Vos macros. Défini dans le `.vscode/settings.json` d'un projet, il ne s'applique qu'à ce projet. |
+| `terminalMacros.detectProjectScripts` | `true` | Détection du dossier de scripts. |
+| `terminalMacros.scriptsFolder` | `"scripts"` | Nom du dossier scanné. |
+| `terminalMacros.scriptRunners` | `{}` | Lanceur par extension, `${script}` = le fichier. Ex. `{ "sh": "wsl bash \"${script}\"" }`. |
 
 ```json
 "terminalMacros.buttons": [
-    {
-        "label": "$(play) Dev",
-        "command": "npm run dev",
-        "tooltip": "Lancer le serveur de développement"
-    },
-    {
-        "label": "$(rocket) Docker Compose",
-        "command": "docker compose up",
-        "cwd": "${workspaceFolder}",
-        "terminalName": "Docker Compose"
-    }
+    { "label": "$(play) Dev", "command": "npm run dev" },
+    { "label": "$(rocket) Docker", "command": "docker compose up", "cwd": "${workspaceFolder}" }
 ]
 ```
 
-L'interface se met à jour automatiquement dès que la configuration change. Le setting peut être défini par workspace (`.vscode/settings.json`) pour avoir des macros différentes par projet ; dans ce cas le panneau écrit dans le workspace.
+| Propriété | Rôle |
+|---|---|
+| `label` ✅ | Texte du bouton, avec [codicon](https://microsoft.github.io/vscode-codicons/dist/codicon.html) optionnel : `$(play) Dev`. |
+| `command` ✅ | Commande shell. Supporte `${workspaceFolder}` et `${file}`. |
+| `tooltip` | Info-bulle au survol. |
+| `cwd` | Répertoire de travail du terminal. |
+| `terminalName` | Nom du terminal (défaut : le label sans icône). |
+| `reuseTerminal` | `false` = nouveau terminal à chaque clic (défaut : réutilise). |
+| `color` | `#ffcc00` ou une couleur de thème (`statusBarItem.warningForeground`). |
+| `showInStatusBar` | `false` = macro visible seulement dans le panneau. |
 
-### Propriétés d'une macro
+## Installation
 
-| Propriété | Requis | Description |
-|---|---|---|
-| `label` | ✅ | Texte du bouton. Peut contenir une icône [codicon](https://microsoft.github.io/vscode-codicons/dist/codicon.html), ex. `$(play) Dev`. |
-| `command` | ✅ | Commande shell exécutée dans le terminal. Supporte `${workspaceFolder}` et `${file}`. |
-| `tooltip` | | Info-bulle au survol. |
-| `terminalName` | | Nom du terminal créé/réutilisé (par défaut : le label sans icône). |
-| `reuseTerminal` | | `true` par défaut : réutilise un terminal existant du même nom au lieu d'en ouvrir un nouveau à chaque clic. |
-| `cwd` | | Répertoire de travail du terminal. Supporte `${workspaceFolder}`. |
-| `color` | | Couleur du texte du bouton de barre d'état : hexadécimal (`#ffcc00`) ou couleur de thème (`statusBarItem.warningForeground`). |
-| `showInStatusBar` | | `true` par défaut : `false` masque le bouton de la barre d'état (la macro reste dans le panneau). |
-
-## Commandes (palette `Ctrl+Shift+P`)
-
-- **Terminal Macros: Choisir une macro à exécuter** (`Ctrl+Alt+M`) — liste avec bouton crayon pour éditer, entrée « Ajouter une macro… ».
-- **Terminal Macros: Ajouter une macro**
-- **Terminal Macros: Modifier une macro**
-- **Terminal Macros: Ajouter des macros d'exemple**
-- **Terminal Macros: Ouvrir les réglages**
-
-## Tester en développement
-
-1. Ouvrir ce dossier dans VSCode.
-2. Appuyer sur `F5` (« Lancer l'extension ») : une fenêtre *Extension Development Host* s'ouvre avec les macros d'exemple (bouton `Hello` et `Docker Compose`).
-
-## Compiler et installer
-
-Double-cliquer sur `install.bat` (ou l'exécuter dans un terminal). Il empaquette l'extension en `.vsix` puis l'installe dans VSCode. Recharger ensuite les fenêtres VSCode ouvertes (`Ctrl+Shift+P` → « Reload Window »).
-
-Manuellement :
+Lancer `scripts/install.bat` : l'extension est empaquetée puis installée. Recharger ensuite VSCode (`Ctrl+Shift+P` → « Reload Window »).
 
 ```powershell
-npx --yes @vscode/vsce package --allow-missing-repository -o terminal-macros.vsix
+npx --yes @vscode/vsce package -o terminal-macros.vsix
 code --install-extension .\terminal-macros.vsix --force
 ```
+
+Pour développer : ouvrir le dossier dans VSCode et appuyer sur `F5`.
