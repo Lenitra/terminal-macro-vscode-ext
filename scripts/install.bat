@@ -4,7 +4,7 @@ rem Se placer dans le dossier du script (racine de l'extension)
 cd /d "%~dp0/.."
 
 echo [1/2] Empaquetage de l'extension (vsce package)...
-call npx --yes @vscode/vsce package -o terminal-macros.vsix
+call npx --yes @vscode/vsce package -o speed-terminal-macros.vsix
 if errorlevel 1 (
     echo.
     echo ECHEC de l'empaquetage. Verifiez que Node.js est installe.
@@ -13,7 +13,7 @@ if errorlevel 1 (
 
 echo.
 echo [2/2] Installation dans VSCode...
-call code --install-extension terminal-macros.vsix --force
+call code --install-extension speed-terminal-macros.vsix --force
 if errorlevel 1 (
     echo.
     echo ECHEC de l'installation. Verifiez que "code" est dans le PATH.
