@@ -1,0 +1,415 @@
+{
+  "name": "terminal-macros",
+  "displayName": "Terminal Macros",
+  "description": "Boutons de barre d'état et panneau latéral pour lancer des terminaux avec des commandes personnalisées.",
+  "version": "0.4.0",
+  "publisher": "thomasl",
+  "license": "MIT",
+  "icon": "media/logo.png",
+  "galleryBanner": {
+    "color": "#1b2440",
+    "theme": "dark"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lenitra/terminal-macro-vscode-ext.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Lenitra/terminal-macro-vscode-ext/issues"
+  },
+  "homepage": "https://github.com/Lenitra/terminal-macro-vscode-ext#readme",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "terminalMacros.run",
+        "title": "Exécuter une macro",
+        "category": "Terminal Macros"
+      },
+      {
+        "command": "terminalMacros.pick",
+        "title": "Choisir une macro à exécuter",
+        "category": "Terminal Macros"
+      },
+      {
+        "command": "terminalMacros.add",
+        "title": "Ajouter une macro",
+        "category": "Terminal Macros",
+        "icon": "$(add)"
+      },
+      {
+        "command": "terminalMacros.addExamples",
+        "title": "Ajouter des macros d'exemple",
+        "category": "Terminal Macros"
+      },
+      {
+        "command": "terminalMacros.edit",
+        "title": "Modifier une macro",
+        "category": "Terminal Macros",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "terminalMacros.duplicate",
+        "title": "Dupliquer",
+        "category": "Terminal Macros",
+        "icon": "$(copy)"
+      },
+      {
+        "command": "terminalMacros.delete",
+        "title": "Supprimer",
+        "category": "Terminal Macros",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "terminalMacros.moveUp",
+        "title": "Monter",
+        "category": "Terminal Macros",
+        "icon": "$(arrow-up)"
+      },
+      {
+        "command": "terminalMacros.moveDown",
+        "title": "Descendre",
+        "category": "Terminal Macros",
+        "icon": "$(arrow-down)"
+      },
+      {
+        "command": "terminalMacros.runFromTree",
+        "title": "Exécuter",
+        "category": "Terminal Macros",
+        "icon": "$(play)"
+      },
+      {
+        "command": "terminalMacros.stop",
+        "title": "Arrêter le terminal",
+        "category": "Terminal Macros",
+        "icon": "$(debug-stop)"
+      },
+      {
+        "command": "terminalMacros.hideFromStatusBar",
+        "title": "Masquer de la barre d'état",
+        "category": "Terminal Macros",
+        "icon": "$(eye-closed)"
+      },
+      {
+        "command": "terminalMacros.showInStatusBar",
+        "title": "Afficher dans la barre d'état",
+        "category": "Terminal Macros",
+        "icon": "$(eye)"
+      },
+      {
+        "command": "terminalMacros.openSettings",
+        "title": "Ouvrir les réglages",
+        "category": "Terminal Macros",
+        "icon": "$(gear)"
+      },
+      {
+        "command": "terminalMacros.runScript",
+        "title": "Exécuter le script",
+        "category": "Terminal Macros",
+        "icon": "$(play)"
+      },
+      {
+        "command": "terminalMacros.openScript",
+        "title": "Ouvrir le fichier",
+        "category": "Terminal Macros",
+        "icon": "$(go-to-file)"
+      },
+      {
+        "command": "terminalMacros.pinScript",
+        "title": "Ajouter aux macros",
+        "category": "Terminal Macros",
+        "icon": "$(pin)"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "terminalMacros.pick",
+        "key": "ctrl+alt+m",
+        "mac": "cmd+alt+m"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "terminalMacros",
+          "title": "Terminal Macros",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "terminalMacros": [
+        {
+          "id": "terminalMacrosView",
+          "name": "Macros",
+          "icon": "media/icon.svg",
+          "contextualTitle": "Terminal Macros"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "terminalMacrosView",
+        "contents": "Aucune macro configurée.\nCréez des boutons qui lancent vos commandes dans un terminal.\n[Ajouter une macro](command:terminalMacros.add)\n[Ajouter des macros d'exemple](command:terminalMacros.addExamples)\nAstuce : les scripts (.bat, .sh, .ps1…) placés dans le dossier « scripts » à la racine de votre projet apparaissent ici automatiquement."
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "terminalMacros.add",
+          "when": "view == terminalMacrosView",
+          "group": "navigation@1"
+        },
+        {
+          "command": "terminalMacros.openSettings",
+          "when": "view == terminalMacrosView",
+          "group": "navigation@2"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "terminalMacros.runFromTree",
+          "when": "view == terminalMacrosView && viewItem =~ /^macro/",
+          "group": "inline@1"
+        },
+        {
+          "command": "terminalMacros.stop",
+          "when": "view == terminalMacrosView && viewItem =~ /-running/",
+          "group": "inline@2"
+        },
+        {
+          "command": "terminalMacros.edit",
+          "when": "view == terminalMacrosView && viewItem =~ /^macro/",
+          "group": "inline@3"
+        },
+        {
+          "command": "terminalMacros.delete",
+          "when": "view == terminalMacrosView && viewItem =~ /^macro/",
+          "group": "inline@4"
+        },
+        {
+          "command": "terminalMacros.runFromTree",
+          "when": "view == terminalMacrosView && viewItem =~ /^macro/",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "terminalMacros.stop",
+          "when": "view == terminalMacrosView && viewItem =~ /-running/",
+          "group": "1_actions@2"
+        },
+        {
+          "command": "terminalMacros.moveUp",
+          "when": "view == terminalMacrosView && viewItem =~ /^macro/",
+          "group": "2_ordre@1"
+        },
+        {
+          "command": "terminalMacros.moveDown",
+          "when": "view == terminalMacrosView && viewItem =~ /^macro/",
+          "group": "2_ordre@2"
+        },
+        {
+          "command": "terminalMacros.edit",
+          "when": "view == terminalMacrosView && viewItem =~ /^macro/",
+          "group": "3_edition@1"
+        },
+        {
+          "command": "terminalMacros.duplicate",
+          "when": "view == terminalMacrosView && viewItem =~ /^macro/",
+          "group": "3_edition@2"
+        },
+        {
+          "command": "terminalMacros.hideFromStatusBar",
+          "when": "view == terminalMacrosView && viewItem =~ /^macro(-running)?$/",
+          "group": "3_edition@3"
+        },
+        {
+          "command": "terminalMacros.showInStatusBar",
+          "when": "view == terminalMacrosView && viewItem =~ /-hidden$/",
+          "group": "3_edition@3"
+        },
+        {
+          "command": "terminalMacros.delete",
+          "when": "view == terminalMacrosView && viewItem =~ /^macro/",
+          "group": "3_edition@4"
+        },
+        {
+          "command": "terminalMacros.runScript",
+          "when": "view == terminalMacrosView && viewItem =~ /^script/",
+          "group": "inline@1"
+        },
+        {
+          "command": "terminalMacros.openScript",
+          "when": "view == terminalMacrosView && viewItem =~ /^script/",
+          "group": "inline@3"
+        },
+        {
+          "command": "terminalMacros.pinScript",
+          "when": "view == terminalMacrosView && viewItem =~ /^script/",
+          "group": "inline@4"
+        },
+        {
+          "command": "terminalMacros.runScript",
+          "when": "view == terminalMacrosView && viewItem =~ /^script/",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "terminalMacros.openScript",
+          "when": "view == terminalMacrosView && viewItem =~ /^script/",
+          "group": "2_fichier@1"
+        },
+        {
+          "command": "terminalMacros.pinScript",
+          "when": "view == terminalMacrosView && viewItem =~ /^script/",
+          "group": "2_fichier@2"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "terminalMacros.run",
+          "when": "false"
+        },
+        {
+          "command": "terminalMacros.runFromTree",
+          "when": "false"
+        },
+        {
+          "command": "terminalMacros.stop",
+          "when": "false"
+        },
+        {
+          "command": "terminalMacros.duplicate",
+          "when": "false"
+        },
+        {
+          "command": "terminalMacros.delete",
+          "when": "false"
+        },
+        {
+          "command": "terminalMacros.moveUp",
+          "when": "false"
+        },
+        {
+          "command": "terminalMacros.moveDown",
+          "when": "false"
+        },
+        {
+          "command": "terminalMacros.hideFromStatusBar",
+          "when": "false"
+        },
+        {
+          "command": "terminalMacros.showInStatusBar",
+          "when": "false"
+        },
+        {
+          "command": "terminalMacros.runScript",
+          "when": "false"
+        },
+        {
+          "command": "terminalMacros.openScript",
+          "when": "false"
+        },
+        {
+          "command": "terminalMacros.pinScript",
+          "when": "false"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Terminal Macros",
+      "properties": {
+        "terminalMacros.buttons": {
+          "type": "array",
+          "scope": "resource",
+          "description": "Liste des macros. Chaque macro est un bouton de la barre d'état et une entrée du panneau latéral, qui lance un terminal avec sa commande.",
+          "default": [
+            {
+              "label": "$(terminal) Hello",
+              "command": "echo Hello depuis Terminal Macros !",
+              "tooltip": "Bouton d'exemple — gérez vos macros depuis le panneau latéral Terminal Macros"
+            },
+            {
+              "label": "$(rocket) Docker Compose",
+              "command": "docker compose up",
+              "cwd": "${workspaceFolder}",
+              "terminalName": "Docker Compose",
+              "tooltip": "Ouvre un terminal à la racine du projet et lance docker compose up"
+            }
+          ],
+          "items": {
+            "type": "object",
+            "required": [
+              "label",
+              "command"
+            ],
+            "properties": {
+              "label": {
+                "type": "string",
+                "description": "Texte du bouton. Peut contenir une icône codicon, ex. \"$(play) Dev\"."
+              },
+              "command": {
+                "type": "string",
+                "description": "Commande shell à exécuter dans le terminal. Supporte ${workspaceFolder} et ${file}."
+              },
+              "tooltip": {
+                "type": "string",
+                "description": "Info-bulle affichée au survol du bouton."
+              },
+              "terminalName": {
+                "type": "string",
+                "description": "Nom du terminal à créer/réutiliser. Par défaut : le label sans icône."
+              },
+              "reuseTerminal": {
+                "type": "boolean",
+                "default": true,
+                "description": "Réutiliser un terminal existant portant le même nom au lieu d'en créer un nouveau à chaque clic."
+              },
+              "cwd": {
+                "type": "string",
+                "description": "Répertoire de travail du terminal. Supporte ${workspaceFolder}."
+              },
+              "color": {
+                "type": "string",
+                "description": "Couleur du texte du bouton, ex. \"#ffcc00\" ou \"statusBarItem.warningForeground\"."
+              },
+              "showInStatusBar": {
+                "type": "boolean",
+                "default": true,
+                "description": "Afficher cette macro dans la barre d'état (elle reste disponible dans le panneau latéral)."
+              }
+            }
+          }
+        },
+        "terminalMacros.detectProjectScripts": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "description": "Détecter automatiquement les scripts (.bat, .cmd, .sh, .bash, .ps1) du dossier de scripts à la racine de chaque projet et les afficher dans le panneau latéral."
+        },
+        "terminalMacros.scriptsFolder": {
+          "type": "string",
+          "default": "scripts",
+          "scope": "resource",
+          "description": "Nom du dossier, relatif à la racine du projet, dans lequel chercher les scripts."
+        },
+        "terminalMacros.scriptRunners": {
+          "type": "object",
+          "scope": "resource",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "default": {},
+          "markdownDescription": "Commande de lancement par extension de script ; `${script}` est remplacé par le chemin du fichier. Exemple : `{ \"sh\": \"wsl bash \\\"${script}\\\"\" }`. Par défaut : `& \"${script}\"` pour .bat/.cmd/.ps1 (PowerShell) et `bash \"${script}\"` pour .sh/.bash."
+        }
+      }
+    }
+  }
+}
