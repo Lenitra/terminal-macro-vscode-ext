@@ -136,6 +136,17 @@ function isRunning(button) {
     return isRunningName(terminalNameFor(button));
 }
 
+/**
+ * Le terminal doit-il se fermer une fois la commande terminée ?
+ * La macro peut surcharger le réglage global via sa propriété closeOnFinish.
+ */
+function shouldCloseOnFinish(button) {
+    if (button && typeof button.closeOnFinish === 'boolean') {
+        return button.closeOnFinish;
+    }
+    return vscode.workspace.getConfiguration('terminalMacros').get('closeTerminalOnFinish', true);
+}
+
 // ---------------------------------------------------------------------------
 // Scripts du projet (dossier scripts/ à la racine du workspace)
 // ---------------------------------------------------------------------------
@@ -242,7 +253,8 @@ function runScript(script) {
     if (!command) {
         return;
     }
-    let terminal = vscode.window.terminals.find(
+    const close = shouldCloseOnFinish(undefined);
+    let terminal = close ? undefined : vscode.window.terminals.find(
         (t) => t.name === script.name && t.exitStatus === undefined
     );
     if (!terminal) {
@@ -254,6 +266,9 @@ function runScript(script) {
     }
     terminal.show();
     terminal.sendText(command);
+    if (close) {
+        terminal.sendText('exit');
+    }
     refreshTree();
 }
 
@@ -300,7 +315,10 @@ function runMacro(button) {
     }
 
     const name = terminalNameFor(button);
-    const reuse = button.reuseTerminal !== false;
+    const close = shouldCloseOnFinish(button);
+    // Un terminal qui se ferme a la fin ne peut pas etre reutilise : la commande
+    // suivante serait envoyee dans un shell en train de quitter.
+    const reuse = !close && button.reuseTerminal !== false;
     const { icon } = parseLabel(button.label);
 
     let terminal;
@@ -319,6 +337,11 @@ function runMacro(button) {
 
     terminal.show();
     terminal.sendText(substituteVariables(button.command));
+    if (close) {
+        // Le shell lit « exit » apres la commande : il quitte des qu'elle est
+        // terminee, et VSCode ferme alors le terminal.
+        terminal.sendText('exit');
+    }
     refreshTree();
 }
 
@@ -795,7 +818,8 @@ async function editMacro(arg) {
                 { key: 'command', label: '$(terminal) Commande', description: b.command },
                 { key: 'cwd', label: '$(folder) Répertoire de travail', description: b.cwd ?? none },
                 { key: 'terminalName', label: '$(window) Nom du terminal', description: b.terminalName ?? `(auto : ${terminalNameFor(b)})` },
-                { key: 'reuseTerminal', label: '$(sync) Réutiliser le terminal', description: b.reuseTerminal === false ? 'non — nouveau terminal à chaque exécution' : 'oui' },
+                { key: 'closeOnFinish', label: '$(chrome-close) Fermer le terminal à la fin', description: b.closeOnFinish === undefined ? `(par défaut : ${shouldCloseOnFinish(b) ? 'oui' : 'non'})` : (b.closeOnFinish ? 'oui' : 'non') },
+                { key: 'reuseTerminal', label: '$(sync) Réutiliser le terminal', description: shouldCloseOnFinish(b) ? 'sans effet : le terminal se ferme à la fin' : (b.reuseTerminal === false ? 'non — nouveau terminal à chaque exécution' : 'oui') },
                 sep('Actions'),
                 { key: 'run', label: '$(play) Tester la macro' },
                 { key: 'duplicate', label: '$(copy) Dupliquer' },
@@ -904,6 +928,28 @@ async function editMacro(arg) {
                     b.terminalName = value;
                 } else {
                     delete b.terminalName;
+                }
+                break;
+            }
+            case 'closeOnFinish': {
+                const globalDefault = vscode.workspace
+                    .getConfiguration('terminalMacros')
+                    .get('closeTerminalOnFinish', true);
+                const picked = await vscode.window.showQuickPick(
+                    [
+                        { label: '$(settings) Par défaut', description: `réglage global : ${globalDefault ? 'fermer' : 'garder ouvert'}`, value: null },
+                        { label: '$(chrome-close) Fermer le terminal', description: 'dès que la commande est terminée', value: true },
+                        { label: '$(pinned) Garder le terminal ouvert', description: 'pour lire la sortie de la commande', value: false },
+                    ],
+                    { placeHolder: 'Comportement une fois la commande terminée', ignoreFocusOut: true }
+                );
+                if (!picked) {
+                    continue;
+                }
+                if (picked.value === null) {
+                    delete b.closeOnFinish;
+                } else {
+                    b.closeOnFinish = picked.value;
                 }
                 break;
             }

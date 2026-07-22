@@ -2,7 +2,7 @@
   "name": "speed-terminal-macros",
   "displayName": "Speed Terminal Macros",
   "description": "Boutons de barre d'état et panneau latéral pour lancer des terminaux avec des commandes personnalisées.",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "publisher": "TauMah",
   "license": "MIT",
   "icon": "media/logo.png",
@@ -384,9 +384,19 @@
                 "type": "boolean",
                 "default": true,
                 "description": "Afficher cette macro dans la barre d'état (elle reste disponible dans le panneau latéral)."
+              },
+              "closeOnFinish": {
+                "type": "boolean",
+                "description": "Fermer le terminal dès que la commande est terminée. Surcharge le réglage global terminalMacros.closeTerminalOnFinish."
               }
             }
           }
+        },
+        "terminalMacros.closeTerminalOnFinish": {
+          "type": "boolean",
+          "default": true,
+          "scope": "resource",
+          "markdownDescription": "Fermer automatiquement le terminal dès que la commande est terminée (un `exit` est envoyé après la commande). Décochez pour garder le terminal ouvert et lire la sortie. Surchargeable macro par macro avec la propriété `closeOnFinish`."
         },
         "terminalMacros.detectProjectScripts": {
           "type": "boolean",
