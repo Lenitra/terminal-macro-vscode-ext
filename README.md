@@ -25,7 +25,7 @@ Les fichiers `.bat`, `.cmd`, `.sh`, `.bash` et `.ps1` du dossier `scripts/` à l
 | Setting | Défaut | Rôle |
 |---|---|---|
 | `terminalMacros.buttons` | 2 exemples | Vos macros. Défini dans le `.vscode/settings.json` d'un projet, il ne s'applique qu'à ce projet. |
-| `terminalMacros.closeTerminalOnFinish` | `true` | Ferme le terminal dès que la commande est terminée. Décocher pour garder la sortie à l'écran. |
+| `terminalMacros.closeTerminalOnFinish` | `true` | Ferme le terminal dès que la commande est terminée. Décocher pour garder la sortie à l'écran : le même terminal est alors réutilisé à chaque exécution. |
 | `terminalMacros.detectProjectScripts` | `true` | Détection du dossier de scripts. |
 | `terminalMacros.scriptsFolder` | `"scripts"` | Nom du dossier scanné. |
 | `terminalMacros.scriptRunners` | `{}` | Lanceur par extension, `${script}` = le fichier. Ex. `{ "sh": "wsl bash \"${script}\"" }`. |
@@ -45,7 +45,6 @@ Les fichiers `.bat`, `.cmd`, `.sh`, `.bash` et `.ps1` du dossier `scripts/` à l
 | `cwd` | Répertoire de travail du terminal. |
 | `terminalName` | Nom du terminal (défaut : le label sans icône). |
 | `closeOnFinish` | Surcharge le réglage global de fermeture pour cette macro. |
-| `reuseTerminal` | `false` = nouveau terminal à chaque clic. Sans effet si le terminal se ferme à la fin. |
 | `color` | `#ffcc00` ou une couleur de thème (`statusBarItem.warningForeground`). |
 | `showInStatusBar` | `false` = macro visible seulement dans le panneau. |
 

@@ -317,8 +317,9 @@ function runMacro(button) {
     const name = terminalNameFor(button);
     const close = shouldCloseOnFinish(button);
     // Un terminal qui se ferme a la fin ne peut pas etre reutilise : la commande
-    // suivante serait envoyee dans un shell en train de quitter.
-    const reuse = !close && button.reuseTerminal !== false;
+    // suivante serait envoyee dans un shell en train de quitter. Sinon on
+    // reutilise toujours le terminal de la macro plutot que d'en empiler.
+    const reuse = !close;
     const { icon } = parseLabel(button.label);
 
     let terminal;
@@ -819,7 +820,6 @@ async function editMacro(arg) {
                 { key: 'cwd', label: '$(folder) Répertoire de travail', description: b.cwd ?? none },
                 { key: 'terminalName', label: '$(window) Nom du terminal', description: b.terminalName ?? `(auto : ${terminalNameFor(b)})` },
                 { key: 'closeOnFinish', label: '$(chrome-close) Fermer le terminal à la fin', description: b.closeOnFinish === undefined ? `(par défaut : ${shouldCloseOnFinish(b) ? 'oui' : 'non'})` : (b.closeOnFinish ? 'oui' : 'non') },
-                { key: 'reuseTerminal', label: '$(sync) Réutiliser le terminal', description: shouldCloseOnFinish(b) ? 'sans effet : le terminal se ferme à la fin' : (b.reuseTerminal === false ? 'non — nouveau terminal à chaque exécution' : 'oui') },
                 sep('Actions'),
                 { key: 'run', label: '$(play) Tester la macro' },
                 { key: 'duplicate', label: '$(copy) Dupliquer' },
@@ -950,13 +950,6 @@ async function editMacro(arg) {
                     delete b.closeOnFinish;
                 } else {
                     b.closeOnFinish = picked.value;
-                }
-                break;
-            }
-            case 'reuseTerminal': {
-                b.reuseTerminal = b.reuseTerminal === false;
-                if (b.reuseTerminal) {
-                    delete b.reuseTerminal;
                 }
                 break;
             }

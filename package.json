@@ -2,7 +2,7 @@
   "name": "speed-terminal-macros",
   "displayName": "Speed Terminal Macros",
   "description": "Boutons de barre d'état et panneau latéral pour lancer des terminaux avec des commandes personnalisées.",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "publisher": "TauMah",
   "license": "MIT",
   "icon": "media/logo.png",
@@ -367,11 +367,6 @@
                 "type": "string",
                 "description": "Nom du terminal à créer/réutiliser. Par défaut : le label sans icône."
               },
-              "reuseTerminal": {
-                "type": "boolean",
-                "default": true,
-                "description": "Réutiliser un terminal existant portant le même nom au lieu d'en créer un nouveau à chaque clic."
-              },
               "cwd": {
                 "type": "string",
                 "description": "Répertoire de travail du terminal. Supporte ${workspaceFolder}."
@@ -396,7 +391,7 @@
           "type": "boolean",
           "default": true,
           "scope": "resource",
-          "markdownDescription": "Fermer automatiquement le terminal dès que la commande est terminée (un `exit` est envoyé après la commande). Décochez pour garder le terminal ouvert et lire la sortie. Surchargeable macro par macro avec la propriété `closeOnFinish`."
+          "markdownDescription": "Fermer automatiquement le terminal dès que la commande est terminée (un `exit` est envoyé après la commande). Décochez pour garder le terminal ouvert et lire la sortie : le terminal de la macro est alors réutilisé à chaque exécution. Surchargeable macro par macro avec la propriété `closeOnFinish`."
         },
         "terminalMacros.detectProjectScripts": {
           "type": "boolean",
